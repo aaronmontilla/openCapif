@@ -1,0 +1,60 @@
+{
+  "apiName": "nac_api",
+  "aefProfiles": [
+    {
+      "aefId": "$aefid",
+      "versions": [
+        {
+          "apiVersion": "v1",
+          "expiry": "2100-01-01T00:00:00.000Z",
+          "resources": [
+            {
+              "resourceName": "NAC_SITES",
+              "commType": "REQUEST_RESPONSE",
+              "uri": "/sites",
+              "custOpName": "http_get",
+              "operations": ["GET"],
+              "description": "Endpoint for retrieving the list of sites. Global (operator) or assigned (third party)"
+            }
+          ],
+          "custOperations": [
+            {
+              "commType": "REQUEST_RESPONSE",
+              "custOpName": "string",
+              "operations": [
+                "POST"
+              ],
+              "description": "string"
+            }
+          ]
+        }
+      ],
+      "protocol": "HTTP_1_1",
+      "dataFormat": "JSON",
+      "securityMethods": ["Oauth"],
+      "interfaceDescriptions": [
+        {
+          "ipv4Addr": "127.0.0.1",
+          "port": 8000,
+          "securityMethods": ["Oauth"]
+        }
+      ]
+    }
+  ],
+  "description": "API of dummy netapp to test (NaC)",
+  "supportedFeatures": "fffff",
+  "shareableInfo": {
+    "isShareable": true,
+    "capifProvDoms": [
+      "string"
+    ]
+  },
+  "serviceAPICategory": "string",
+  "apiSuppFeats": "fffff",
+  "pubApiPath": {
+    "ccfIds": [
+      "string"
+    ]
+  },
+  "ccfId": "string"
+}
