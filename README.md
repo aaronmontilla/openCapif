@@ -1,13 +1,14 @@
+This repository implements an OpenCAPIF client capable of performing any action that a provider is able to do.
 
+To start working with this repository execute the "make" command in this folder.
 
-Primer paso es generar los archivos crt tanto de la función register como capifcore, para hacerlo está el script get_ca.sh que deberemos de ejecutar sin ningún parámetro.
+After performing that step execute:
 
-Para compilar el archivo se debe de ejecutar el comando make.
+./get_certs.sh
 
-Generamos los certificados para llevar a cabo el proceso con el script get_certs.sh
+Finally to start the process execute
 
-Una vez tenemos todos los archivos generados debemos de utilizar el script opencapif_process que irá pidiendo credenciales a medida que avanzamos en el proceso.
+./opencapif_process
 
-
-
+And follow each step that is required.
 
