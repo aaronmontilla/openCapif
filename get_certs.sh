@@ -4,6 +4,8 @@ capifregisterport="8084"
 capifcore="capifhost" # Configure hostname in /etc/hosts, if needed
 capifcoreport="443"
 
+mkdir -p certificates
+
 ##### Retrieve servers certificates:
 echo | openssl s_client -showcerts -connect $capifregister:$capifregisterport 2>/dev/null | openssl x509 -text | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > certificates/ca_register.crt
 echo | openssl s_client -showcerts -connect $capifcore:$capifcoreport 2>/dev/null | openssl x509 -text | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > certificates/ca_capifcore.crt
