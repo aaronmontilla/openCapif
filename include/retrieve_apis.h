@@ -1,5 +1,5 @@
-#ifndef PUBLISH_API_H
-#define PUBLISH_API_H
+#ifndef RETRIEVE_APIS_H
+#define RETRIEVE_APIS_H
 
 #include <curl/curl.h>
 #include <stdlib.h>
@@ -10,7 +10,7 @@
 
 
 // Function declarations and other definitions can go here
-int publish_api( char* username, char* aefid, char* apfid);
+int retrieve_apis( char* username, char* provider_id);
 
 
-#endif // PUBLISH_API_H
+#endif // RETRIEVE_APIS

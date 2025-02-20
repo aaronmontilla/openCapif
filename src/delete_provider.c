@@ -1,7 +1,7 @@
-#include "publish_api.h" 
+#include "delete_provider.h" 
 #include "general_utils.h"
 
-int publish_api_curl(char *data, char* username, char *apfid){
+int delete_provider(char* username, char *provider_id){
 
     CURL *curl;
     CURLcode res;
@@ -11,14 +11,15 @@ int publish_api_curl(char *data, char* username, char *apfid){
 
     struct MemoryStruct chunk; /* Creamos una memoria de ese tipo llamado chunk */
     chunk.memory = malloc(1);  /* Iremos aumentando la memoria conforme necesitemos espacio */
+    //inicializamos memoria a null
+    chunk.memory[0] = '\0';
     chunk.size = 0;
     
     if(curl) {
-        curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
 
-        char* url = "https://capifcore/published-apis/v1/$apfid/service-apis";
-        replace_placeholder(url, "$apfid", apfid, &url);
-        printf("URL: %s\n", url);
+        char* url = "https://capifcore/api-provider-management/v1/registrations/$provider_id";
+        replace_placeholder(url, "$provider_id", provider_id, &url);
         curl_easy_setopt(curl, CURLOPT_URL, url);
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
         curl_easy_setopt(curl, CURLOPT_DEFAULT_PROTOCOL, "https");
@@ -33,24 +34,18 @@ int publish_api_curl(char *data, char* username, char *apfid){
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
 
         // Set the client certificate
-        char* crt_path = "certificates/$username_APF.crt";
+        char* crt_path = "certificates/$username_AMF.crt";
         replace_placeholder(crt_path, "$username", username, &crt_path);
         curl_easy_setopt(curl, CURLOPT_SSLCERT, crt_path);
 
 
         // Set the client private key
-        char* key_path = "certificates/$username_apf.key";
+        char* key_path = "certificates/$username_amf.key";
         replace_placeholder(key_path, "$username", username, &key_path);
         curl_easy_setopt(curl, CURLOPT_SSLKEY, key_path);
 
         struct curl_slist *headers = NULL;
 
-        //Añadimos el tipo de contenido a la cabecera y el JSON con los datos del usuario
-        headers = curl_slist_append(headers, "Content-Type: application/json");
-
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data);
-        
-        
         //Unir los headers a la petición y realizar la petición
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
@@ -74,11 +69,3 @@ int publish_api_curl(char *data, char* username, char *apfid){
   return 0;
 }
 
-int publish_api(char* username, char* aefid, char* apfid){
-    char* data = NULL;
-    read_file("json/api_service.json", &data);
-
-    replace_placeholder(data, "$aefid", aefid, &data);
-    publish_api_curl(data, username, apfid);
-    return 0;
-}

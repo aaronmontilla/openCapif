@@ -13,6 +13,6 @@
 int parse_login_admin(const char *json_string, char **access_token, char **refresh_token);
 int parse_uuid(const char *json_string, char **uuid);
 int login_admin_curl(char **access_token, char **refresh_token);
-int create_user_curl(char *access_token, char **uuid);
+int create_user_curl(char *access_token, char* username, char* password, char **uuid);
 
 #endif // CREATE_USER_H

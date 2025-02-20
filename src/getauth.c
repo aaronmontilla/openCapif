@@ -152,6 +152,8 @@ int get_auth_curl(char* url, struct AuthCreds *auth_cred){
             printf("CCF Onboarding URL: %s\n", auth_cred->ccf_onboarding_url);
             printf("CCF Publish URL: %s\n", auth_cred->ccf_publish_url);
             printf("CCF Security URL: %s\n", auth_cred->ccf_security_url);
+            }else{
+                return 1;
             }
         
         }

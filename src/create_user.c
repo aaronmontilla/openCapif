@@ -98,10 +98,8 @@ int login_admin_curl(char **access_token, char **refresh_token){
 
 
         struct curl_slist *headers = NULL;
-        //headers = curl_slist_append(headers, "Authorization: Basic YWRtaW46cGFzc3dvcmQxMjM=");
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
         res = curl_easy_perform(curl);
-        //curl_slist_free_all(headers);
         curl_easy_cleanup(curl);
   
     
@@ -126,7 +124,7 @@ int login_admin_curl(char **access_token, char **refresh_token){
     return 0;
 }
 
-int create_user_curl(char *access_token, char **uuid){
+int create_user_curl(char *access_token, char* username, char* password, char **uuid){
 
     CURL *curl;
     CURLcode res;
@@ -168,8 +166,8 @@ int create_user_curl(char *access_token, char **uuid){
 
         char* data = NULL;
         read_file("json/create_user.json", &data);
-        replace_placeholder(data, "rp_username", "aaron", &data);
-        replace_placeholder(data, "rp_password", "root", &data);
+        replace_placeholder(data, "rp_username", username, &data);
+        replace_placeholder(data, "rp_password", password, &data);
 
         
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data);

@@ -132,15 +132,21 @@ int register_provider(char* username, char* access_token){
     char *apf_csr = NULL;
     char *amf_csr = NULL;
 
-    if (read_file("certificates/aaron_aef.csr", &aef_csr)){
+    char* aef_csr_path = "certificates/$username_aef.csr";
+    replace_placeholder(aef_csr_path, "$username", username, &aef_csr_path);
+    if (read_file(aef_csr_path, &aef_csr)){
         return 1;
     }
 
-    if (read_file("certificates/aaron_apf.csr", &apf_csr)){
+    char* apf_csr_path = "certificates/$username_apf.csr";
+    replace_placeholder(apf_csr_path, "$username", username, &apf_csr_path);
+    if (read_file(apf_csr_path, &apf_csr)){
         return 1;
     }
 
-    if (read_file("certificates/aaron_amf.csr", &amf_csr)){
+    char* amf_csr_path = "certificates/$username_amf.csr";
+    replace_placeholder(amf_csr_path, "$username", username, &amf_csr_path);
+    if (read_file(amf_csr_path, &amf_csr)){
         return 1;
     }
 

@@ -1,7 +1,7 @@
-#include "publish_api.h" 
+#include "delete_api.h" 
 #include "general_utils.h"
 
-int publish_api_curl(char *data, char* username, char *apfid){
+int delete_api(char* username, char *provider_id, char* api_id){
 
     CURL *curl;
     CURLcode res;
@@ -11,14 +11,17 @@ int publish_api_curl(char *data, char* username, char *apfid){
 
     struct MemoryStruct chunk; /* Creamos una memoria de ese tipo llamado chunk */
     chunk.memory = malloc(1);  /* Iremos aumentando la memoria conforme necesitemos espacio */
+    //inicializamos memoria a null
+    chunk.memory[0] = '\0';
     chunk.size = 0;
     
     if(curl) {
-        curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
 
-        char* url = "https://capifcore/published-apis/v1/$apfid/service-apis";
-        replace_placeholder(url, "$apfid", apfid, &url);
-        printf("URL: %s\n", url);
+        char* url = "https://capifcore/published-apis/v1/$provider_id/service-apis/$api_id";
+        replace_placeholder(url, "$provider_id", provider_id, &url);
+        replace_placeholder(url, "$api_id", api_id, &url);
+
         curl_easy_setopt(curl, CURLOPT_URL, url);
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
         curl_easy_setopt(curl, CURLOPT_DEFAULT_PROTOCOL, "https");
@@ -45,12 +48,6 @@ int publish_api_curl(char *data, char* username, char *apfid){
 
         struct curl_slist *headers = NULL;
 
-        //Añadimos el tipo de contenido a la cabecera y el JSON con los datos del usuario
-        headers = curl_slist_append(headers, "Content-Type: application/json");
-
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data);
-        
-        
         //Unir los headers a la petición y realizar la petición
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
@@ -74,11 +71,3 @@ int publish_api_curl(char *data, char* username, char *apfid){
   return 0;
 }
 
-int publish_api(char* username, char* aefid, char* apfid){
-    char* data = NULL;
-    read_file("json/api_service.json", &data);
-
-    replace_placeholder(data, "$aefid", aefid, &data);
-    publish_api_curl(data, username, apfid);
-    return 0;
-}
