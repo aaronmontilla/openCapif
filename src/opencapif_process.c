@@ -1,6 +1,7 @@
 
 #include "opencapif_process.h" 
 #include "create_user.h" 
+#include "delete_user.h"
 #include "getauth.h" 
 #include "register_provider.h"
 #include "publish_api.h"
@@ -22,6 +23,14 @@ int register_provider_process(char* username, char* password){
         printf("Memory allocation failed for authorization\n");
     }   
 
+    //open a tmp file to store the credentials
+    FILE *tmp_file = fopen("tmp", "w");
+    if (tmp_file == NULL) {
+        printf("Error opening file!\n");
+        return 1;
+    }
+    fprintf(tmp_file, "Username: %s\n Password: %s\n", username, password);
+
     //Login admin
 
     if(login_admin_curl(&access_token, &refresh_token)){
@@ -33,10 +42,14 @@ int register_provider_process(char* username, char* password){
     printf("Access token: %s\n", access_token);
     printf("Refresh token: %s\n", refresh_token);
 
+    fprintf(tmp_file, "Access token: %s\n Refresh token: %s\n", access_token, refresh_token);
+
     //Create user
     if(create_user_curl(access_token,  username, password, &uuid)){
         printf("User creation failed\n");
     }
+
+    fprintf(tmp_file, "UUID: %s\n", uuid);
 
     free(access_token);
     free(refresh_token);
@@ -69,6 +82,8 @@ int register_provider_process(char* username, char* password){
         free(auth_creds);
         return 1;
     }
+    fprintf(tmp_file, "Acces auth creds: %s\n", auth_creds->access_token);
+    fclose(tmp_file);
     
     free(auth_creds);
     return 0;
@@ -93,15 +108,18 @@ int main(){
 
     int option;
     char *provider_id = NULL;
+    char *uuid = NULL;
+    char *access_token = NULL;
 
-    while(option != 5){
+    while(option != 7){
     printf("Choose one of the following options:\n");
     printf("1. Register provider\n");
-    printf("2. Delete provider\n");
-    printf("3. Publish API\n");
-    printf("4. Delete API\n");
-    printf("5. Get all APIs from a provider\n");
-    printf("6. Exit\n");
+    printf("2. Delete user\n");
+    printf("3. Delete provider\n");
+    printf("4. Publish API\n");
+    printf("5. Delete API\n");
+    printf("6. Get all APIs from a provider\n");
+    printf("7. Exit\n");
     
     scanf("%d", &option);
     
@@ -114,6 +132,22 @@ int main(){
                 }
                 break;
             case 2:
+                printf ("Deleting user\n");
+                /**/
+                uuid = malloc(50);
+                printf("Please provide UUID:");
+                scanf("%s", uuid);
+                access_token = malloc(200);
+                printf("Please provide access_token:");
+                scanf("%s", access_token);
+                if(delete_user(uuid, access_token)){
+                    printf("Error registering provider\n");
+                }
+                free(uuid);
+                free(access_token);
+                printf("Not implemented yet\n");
+                break;
+            case 3:
                 printf ("Delete provider\n");
                 provider_id = malloc(50);
                 printf("Please provide provider ID:");
@@ -124,7 +158,7 @@ int main(){
                 free(provider_id);
                 break;
 
-            case 3:
+            case 4:
                 printf ("Publish API\n");
                 printf("Please provide APF ID:");
                 char *apf_id = malloc(50);
@@ -139,7 +173,7 @@ int main(){
                 free(aef_id);
                 break;
 
-            case 4:
+            case 5:
                 printf ("Delete API\n");
                 provider_id = malloc(50);
                 printf("Please provide publisher ID:");
@@ -154,19 +188,19 @@ int main(){
                 free(api_id);
                 break;
             
-            case 5:
+            case 6:
                 printf ("Get all APIs from a provider\n");
                 provider_id = malloc(50);
-                printf("Please provide provider ID:");
+                printf("Please provide publisher ID:");
                 scanf("%s", provider_id);
                 if(retrieve_apis(username, provider_id)){
-                    printf("Error deleting provider\n");
+                    printf("Error retrieving APIs\n");
                 }
                 free(provider_id);
                 break;
             
-            case 6:
-                printf ("Thanks foor using OpenCAPIF provider client\n");
+            case 7:
+                printf ("Thanks for using OpenCAPIF provider client\n");
                 free(username);
                 free(password);
                 break;

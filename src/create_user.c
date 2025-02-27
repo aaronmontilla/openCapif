@@ -197,6 +197,12 @@ int create_user_curl(char *access_token, char* username, char* password, char **
 
     curl_easy_cleanup(curl);
     free(chunk.memory);
+    free(authorization);
+    free(data);
+    }
+    else{
+        printf("Error initializing curl\n");
+        return 1;
     }
   return 0;
 }
