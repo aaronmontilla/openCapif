@@ -25,6 +25,14 @@ cd openCapif
 Compile the client by running:
 
 ```bash
+meson setup builddir .
+meson compile -C builddir
+```
+
+
+Or the project can also be built by Make using:
+
+```bash
 make
 ```
 
@@ -42,6 +50,12 @@ Once this is done get the certificates by running:
 ## 🚀 Run the OpenCAPIF Process
 Start the client:
 
+```bash
+./builddir/opencapif_process
+```
+
+Or if it was built using Make use:
+ 
 ```bash
 ./opencapif_process
 ```
